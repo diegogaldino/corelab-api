@@ -5,6 +5,7 @@ import findCarController from "../useCases/FindCar";
 import deleteCarController from "../useCases/DeleteCar";
 import updateCarController from "../useCases/UpdateCar";
 import updateFavoriteCarController from "../useCases/UpdateFavoriteCar";
+import searchCarController from "../useCases/SearchCar";
 
 const carRoutes = Router();
 
@@ -18,6 +19,9 @@ carRoutes.post("/", (request, response) => {
 
 carRoutes.get("/", (request, response) => {
   return listCarsController().handle(request, response);
+});
+carRoutes.get("/search/manufacturer/:manufacturer/color/:color/year/:year/min/:priceMin/max/:priceMax", (request, response) => {
+  return searchCarController().handle(request, response);
 });
 
 carRoutes.delete("/:id", (request, response) => {

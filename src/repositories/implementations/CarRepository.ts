@@ -1,6 +1,6 @@
 import { prismaClient } from "../../database/prismaClient";
 import { Car } from "../../entities/Car";
-import { ICarRepository, ICarDTO, IFavoriteCarDTO } from "../ICarRepository";
+import { ICarRepository, ICarDTO, IFavoriteCarDTO, ICarSearchDTO } from "../ICarRepository";
 
 class CarRepository implements ICarRepository {
 
@@ -30,8 +30,15 @@ class CarRepository implements ICarRepository {
 
     return car;
   }
+
+  async findByOptions({ manufacturer, color, year, priceMin, priceMax }: ICarSearchDTO): Promise<Car[]> {
+    const cars = await prismaClient.car.findMany({ where:{ manufacturer, color, year, price:{ gte: priceMin, lte: priceMax }}});
+
+    return cars;
+  }
+
   async deleteById(id: string): Promise<void> {
-    console.log(id)
+
     const car = await prismaClient.car.delete({ where: { id } });
 
   }
@@ -53,7 +60,7 @@ class CarRepository implements ICarRepository {
   }
 
   async updateFavoriteById({id, favorite }: IFavoriteCarDTO): Promise<void> {
-    console.log(id)
+
     const car = await prismaClient.car.update({ 
       where: { id },
       data: {
